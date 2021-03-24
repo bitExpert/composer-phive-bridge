@@ -95,7 +95,7 @@ class PhiveHandler
 		fclose($fi);
 		fclose($fo);
 
-		chmod($this->path, 0755);
+		chmod($this->path, 0777 & ~umask());
 	}
 
 }
