@@ -1,27 +1,48 @@
 {
-    "name": "bitexpert/composer-phive-bridge",
-    "description": "Update tools via phive on composer update",
-    "type": "composer-plugin",
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "Andreas Heigl",
-            "email": "a.heigl@bitexpert.de"
-        }
+  "name": "bitexpert/composer-phive-bridge",
+  "description": "Update tools via phive on composer update",
+  "type": "composer-plugin",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Andreas Heigl",
+      "email": "a.heigl@bitexpert.de"
+    }
+  ],
+  "require": {
+    "php": "^7.4|~8.0.0",
+    "composer-plugin-api": "^2.0"
+  },
+  "require-dev": {
+    "composer/composer": "^2.0",
+    "squizlabs/php_codesniffer": "^3.5",
+    "phpstan/phpstan": "^0.12.82",
+    "phpunit/phpunit": "^9.5",
+    "captainhook/captainhook": "^5.5",
+    "captainhook/plugin-composer": "^5.2",
+    "roave/security-advisories": "dev-master",
+    "phpstan/phpstan-strict-rules": "^0.12.9"
+  },
+  "autoload": {
+    "psr-4": {
+      "bitExpert\\ComposerPhiveBridge\\": "src"
+    }
+  },
+  "extra": {
+    "class": "bitExpert\\ComposerPhiveBridge\\Plugin"
+  },
+  "scripts": {
+    "check": [
+      "@cs-check",
+      "@test"
     ],
-    "require": {
-			"php": "^7.4|~8.0.0",
-			"composer-plugin-api": "^2.0"
-		},
-	"require-dev": {
-		"composer/composer": "^2.0"
-	},
-	"autoload": {
-		"psr-4": {
-			"bitExpert\\ComposerPhiveBridge\\": "src"
-		}
-	},
-	"extra": {
-		"class": "bitExpert\\ComposerPhiveBridge\\Plugin"
-	}
+    "cs-check": "vendor/bin/phpcs --standard=PSR2 ./src",
+    "cs-fix": "vendor/bin/phpcbf",
+    "analyze": "vendor/bin/phpstan analyze",
+    "test": "vendor/bin/phpunit",
+    "coverage": "vendor/bin/phpunit --coverage-clover clover.xml"
+  },
+  "config": {
+    "sort-packages": true
+  }
 }
