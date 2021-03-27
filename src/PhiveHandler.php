@@ -10,7 +10,6 @@ declare(strict_types=1);
 
 namespace bitExpert\ComposerPhiveBridge;
 
-
 use Composer\IO\IOInterface;
 use function chmod;
 use function dirname;
@@ -45,13 +44,16 @@ class PhiveHandler
 				'Found phive at %s',
 				$this->path
 			));
+
 			return $this;
 		}
+
 		$this->installPhive();
 		$this->io->write(sprintf(
 			'Found phive at %s',
 			$this->path
 		));
+
 		return $this;
 	}
 
@@ -63,8 +65,10 @@ class PhiveHandler
 				'Could not find a config-file for phive at %s',
 				$this->workingDirectory
 			));
+
 			return $this;
 		}
+
 		$this->io->write(sprintf(
 			'Running "%s install"',
 			$this->path
@@ -85,11 +89,11 @@ class PhiveHandler
 		if (file_exists($this->path) && is_executable($this->path)) {
 			return;
 		}
-		$this->io->write('Downloading phive...');
 
+		$this->io->write('Downloading phive...');
 		$fi = fopen('https://phar.io/releases/phive.phar', 'r');
 		$fo = fopen($this->path, 'w+');
-		while(! feof($fi)) {
+		while (! feof($fi)) {
 			fwrite($fo, fread($fi, 1024));
 		}
 		fclose($fi);
@@ -97,5 +101,4 @@ class PhiveHandler
 
 		chmod($this->path, 0777 & ~umask());
 	}
-
 }
