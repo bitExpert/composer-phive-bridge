@@ -35,6 +35,11 @@ jobs:
           home: "${{ runner.temp }}/.phive"
           binPath: "${{ github.workspace }}/tools/phive"
 
+      - name: "Install bitExpert/composer-phive-bridge"
+        run: |
+          sed -i -e 's#"type": "composer-plugin",#&\n"repositories": [ { "type": "path", "url": "./" } ],#' composer.json
+          composer require --no-update bitexpert/composer-phive-bridge
+
       - name: Install Composer dependencies
         if: matrix.composer-prefer-lowest == false
         run: composer update
