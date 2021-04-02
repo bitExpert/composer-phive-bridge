@@ -3,7 +3,7 @@ on:
   pull_request:
   push:
     branches:
-      - "master"
+      - "main"
 
 jobs:
   run:
@@ -11,23 +11,23 @@ jobs:
     strategy:
       matrix:
         operating-system: ['ubuntu-latest']
-        php-versions: ['7.4', '8.0']
+        php-version: ['7.4', '8.0']
         composer-prefer-lowest: [false]
         include:
           - operating-system: 'ubuntu-latest'
-            php-versions: '7.4'
+            php-version: '7.4'
             composer-prefer-lowest: true
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v2
-
-      - name: Configure PHP
+      - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: ${{ matrix.php-versions }}
+          php-version: ${{ matrix.php-version }}
           tools: composer:v2
-          coverage: xdebug
+          #coverage: xdebug
+
+      - name: Checkout repo
+        uses: actions/checkout@v2
 
       - name: Install PHIVE
         uses: szepeviktor/phive@v1
@@ -35,17 +35,19 @@ jobs:
           home: "${{ runner.temp }}/.phive"
           binPath: "${{ github.workspace }}/tools/phive"
 
-      - name: Install Composer dependencies
-        run: composer install
+      - name: Start PHIVE manually
+        run: "${{ github.workspace }}/tools/phive --no-progress install --trust-gpg-keys 4AA394086372C20A,31C7E470E2138192,CF1A108D0E7AE720"
 
-      - name: Install lowest CaptainHookPHP version
+      - name: Install Composer dependencies
+        if: matrix.composer-prefer-lowest == false
+        run: composer update
+
+      - name: Install lowest Composer dependencies
         if: matrix.composer-prefer-lowest == true
-        run: |
-          composer install
-          composer update --prefer-lowest
+        run: composer update --prefer-lowest
 
       - name: Codesniffer
-        run: composer cs-check
+        run: composer run-script cs-check
 
       - name: Static code analysis
-        run: composer analyze
+        run: composer run-script analyze
