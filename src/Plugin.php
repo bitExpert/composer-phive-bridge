@@ -1,12 +1,15 @@
 <?php
 
-declare(strict_types=1);
-
-/**
- * Copyright bitExpert AG
+/*
+ * This file is part of the Composer-PHIVE Bridge package.
  *
- * Licenses under the MIT-license. For details see the included file LICENSE.md
+ * (c) bitExpert AG
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
+
+declare(strict_types=1);
 
 namespace bitExpert\ComposerPhiveBridge;
 
