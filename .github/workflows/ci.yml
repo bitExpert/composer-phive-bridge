@@ -36,7 +36,7 @@ jobs:
           binPath: "${{ github.workspace }}/tools/phive"
 
       - name: Start PHIVE manually
-        run: "${{ github.workspace }}/tools/phive --no-progress install --trust-gpg-keys 4AA394086372C20A,31C7E470E2138192"
+        run: "${{ github.workspace }}/tools/phive --no-progress install --trust-gpg-keys 4AA394086372C20A,31C7E470E2138192,CF1A108D0E7AE720"
 
       - name: Install Composer dependencies
         if: matrix.composer-prefer-lowest == false
