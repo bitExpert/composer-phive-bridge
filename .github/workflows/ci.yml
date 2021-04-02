@@ -35,9 +35,8 @@ jobs:
           home: "${{ runner.temp }}/.phive"
           binPath: "${{ github.workspace }}/tools/phive"
 
-      - name: "Add Plugin::preAutoloadDump as a script"
-        run: |
-          sed -i -e 's#"scripts": {#&\n"pre-autoload-dump": "bitExpert\\\\ComposerPhiveBridge\\\\Plugin::preAutoloadDump",#' composer.json
+      - name: Start PHIVE manually
+        run: "${{ github.workspace }}/tools/phive install"
 
       - name: Install Composer dependencies
         if: matrix.composer-prefer-lowest == false
