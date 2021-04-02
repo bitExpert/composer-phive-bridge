@@ -28,6 +28,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      *
      * @param Composer $composer
      * @param IOInterface $io
+     * @return void
      */
     public function activate(Composer $composer, IOInterface $io)
     {
@@ -42,6 +43,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      *
      * @param Composer $composer
      * @param IOInterface $io
+     * @return void
      */
     public function deactivate(Composer $composer, IOInterface $io)
     {
@@ -55,6 +57,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      *
      * @param Composer $composer
      * @param IOInterface $io
+     * @return void
      */
     public function uninstall(Composer $composer, IOInterface $io)
     {
@@ -77,7 +80,7 @@ class Plugin implements PluginInterface, EventSubscriberInterface
      * * array('eventName' => array('methodName', $priority))
      * * array('eventName' => array(array('methodName1', $priority), array('methodName2'))
      *
-     * @return array The event names to listen to
+     * @return array<string, array<int, array<int, int|string>>> The event names to listen to
      */
     public static function getSubscribedEvents()
     {
@@ -90,13 +93,22 @@ class Plugin implements PluginInterface, EventSubscriberInterface
 
     public function preAutoloadDump(Event $event): void
     {
-        $this->getPhiveHandler($event)
-            ->assertPhiveAvailability()
-            ->install();
+        try {
+            $this->getPhiveHandler($event)
+                ->assertPhiveAvailability()
+                ->install();
+        } catch (\RuntimeException $e) {
+        }
     }
 
     private function getPhiveHandler(Event $event): PhiveHandler
     {
-        return new PhiveHandler(getcwd(), $event->getIO());
+        $curWorkDir = getcwd();
+        if ($curWorkDir === false) {
+            $event->getIO()->writeError('Cannot detect current working directory!');
+            throw new \RuntimeException();
+        }
+
+        return new PhiveHandler($curWorkDir, $event->getIO());
     }
 }

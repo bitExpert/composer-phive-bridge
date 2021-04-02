@@ -25,10 +25,17 @@ use function sprintf;
 
 class PhiveHandler
 {
+    /**
+     * @var string
+     */
     private $path;
-
+    /**
+     * @var false|string
+     */
     private $workingDirectory;
-
+    /**
+     * @var IOInterface
+     */
     private $io;
 
     public function __construct(string $path, IOInterface $io)
@@ -84,8 +91,17 @@ class PhiveHandler
         $this->io->write('Downloading phive...');
         $fi = fopen('https://phar.io/releases/phive.phar', 'r');
         $fo = fopen($this->path, 'w+');
+        if ($fi === false || $fo === false) {
+            return;
+        }
+
         while (!feof($fi)) {
-            fwrite($fo, fread($fi, 1024));
+            $buffer = fread($fi, 1024);
+            if ($buffer === false) {
+                break;
+            }
+
+            fwrite($fo, $buffer);
         }
         fclose($fi);
         fclose($fo);
