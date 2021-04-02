@@ -44,7 +44,7 @@ jobs:
         run: composer update --prefer-lowest
 
       - name: "Manually trigger pre-autoload-dump"
-        run: composer run-script -vvv pre-autoload-dump
+        run: composer dump-autoload -vvv
 
       - name: Codesniffer
         run: composer run-script cs-check
