@@ -1,5 +1,7 @@
 # Composer-PHIVE Bridge
 
+[![Build Status](https://github.com/bitExpert/composer-phive-bridge/workflows/ci/badge.svg?branch=master)](https://github.com/bitExpert/composer-phive-bridge/actions)
+
 Update the phive toolset on `composer update`
 
 [PHIVE](https://phar.io) is a tool to distribute PHAR files which is ideal to distribute tools for your
