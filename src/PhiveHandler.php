@@ -25,83 +25,71 @@ use function sprintf;
 
 class PhiveHandler
 {
-	private $path;
+    private $path;
 
-	private $workingDirectory;
+    private $workingDirectory;
 
-	private $io;
+    private $io;
 
-	public function __construct(string $path, IOInterface $io)
-	{
-		$this->workingDirectory = realpath($path);
-		$this->path = $this->workingDirectory . '/tools/phive';
-		$this->io = $io;
-	}
+    public function __construct(string $path, IOInterface $io)
+    {
+        $this->workingDirectory = realpath($path);
+        $this->path = $this->workingDirectory . '/tools/phive';
+        $this->io = $io;
+    }
 
-	public function assertPhiveAvailability(): self
-	{
-		exec('which phive', $result);
-		if (count($result) > 0) {
-			$this->path = $result[0];
-			$this->io->write(sprintf(
-				'Found phive at %s',
-				$this->path
-			));
+    public function assertPhiveAvailability(): self
+    {
+        exec('which phive', $result);
+        if (count($result) > 0) {
+            $this->path = $result[0];
+            $this->io->write(sprintf('Found phive at %s', $this->path));
 
-			return $this;
-		}
+            return $this;
+        }
 
-		$this->installPhive();
-		$this->io->write(sprintf(
-			'Found phive at %s',
-			$this->path
-		));
+        $this->installPhive();
+        $this->io->write(sprintf('Found phive at %s', $this->path));
 
-		return $this;
-	}
+        return $this;
+    }
 
-	public function install(): self
-	{
-		if (! file_exists($this->workingDirectory . '/phive.xml') &&
-			! file_exists($this->workingDirectory . '/.phive/phars.xml')) {
-			$this->io->write(sprintf(
-				'Could not find a config-file for phive at %s',
-				$this->workingDirectory
-			));
+    public function install(): self
+    {
+        if (!file_exists($this->workingDirectory . '/phive.xml') &&
+            !file_exists($this->workingDirectory . '/.phive/phars.xml')) {
+            $this->io->write(sprintf('Could not find a config-file for phive at %s', $this->workingDirectory));
 
-			return $this;
-		}
+            return $this;
+        }
 
-		$this->io->write(sprintf(
-			'Running "%s install"',
-			$this->path
-		));
-		exec($this->path . ' install', $result);
-		foreach ($result as $line){
-			$this->io->write("\t" . $line);
-		}
+        $this->io->write(sprintf('Running "%s install"', $this->path));
+        exec($this->path . ' install', $result);
+        foreach ($result as $line) {
+            $this->io->write("\t" . $line);
+        }
 
-		return $this;
-	}
+        return $this;
+    }
 
-	private function installPhive(): void
-	{
-		if (! file_exists(dirname($this->path))) {
-			mkdir(dirname($this->path), 0777, true);
-		}
-		if (file_exists($this->path) && is_executable($this->path)) {
-			return;
-		}
+    private function installPhive(): void
+    {
+        if (!file_exists(dirname($this->path))) {
+            mkdir(dirname($this->path), 0777, true);
+        }
+        if (file_exists($this->path) && is_executable($this->path)) {
+            return;
+        }
 
-		$this->io->write('Downloading phive...');
-		$fi = fopen('https://phar.io/releases/phive.phar', 'r');
-		$fo = fopen($this->path, 'w+');
-		while (! feof($fi)) {
-			fwrite($fo, fread($fi, 1024));
-		}
-		fclose($fi);
-		fclose($fo);
+        $this->io->write('Downloading phive...');
+        $fi = fopen('https://phar.io/releases/phive.phar', 'r');
+        $fo = fopen($this->path, 'w+');
+        while (!feof($fi)) {
+            fwrite($fo, fread($fi, 1024));
+        }
+        fclose($fi);
+        fclose($fo);
 
-		chmod($this->path, 0777 & ~umask());
-	}
+        chmod($this->path, 0777 & ~umask());
+    }
 }
