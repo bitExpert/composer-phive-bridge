@@ -1,6 +1,7 @@
 # Composer-PHIVE Bridge
 
 [![Build Status](https://github.com/bitExpert/composer-phive-bridge/workflows/ci/badge.svg?branch=master)](https://github.com/bitExpert/composer-phive-bridge/actions)
+![Mastodon Follow](https://img.shields.io/mastodon/follow/109408681246972700?domain=https://rheinneckar.social)
 
 Update the phive toolset on `composer update`
 
